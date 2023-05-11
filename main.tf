@@ -26,14 +26,7 @@ resource "aws_security_group" "rabbitmq" {
 
 }
 
-#resource "aws_mq_configuration" "rabbitmq" {
-#  description    = "${var.env}-rabbittmq_mq_configuration"
-#  name           = "${var.env}-rabbittmq_mq_configuration"
-#  engine_type    = var.engine_type
-#  engine_version = var.engine_version
-#
-#  data = ""
-#}
+
 
 
 resource "aws_mq_broker" "rabbitmq" {
