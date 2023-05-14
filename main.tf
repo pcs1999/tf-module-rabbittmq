@@ -57,5 +57,5 @@ resource "aws_mq_broker" "rabbitmq" {
 resource "aws_ssm_parameter" "rabbitmq_endpoint" {
   name  = "${var.env}.rabbitmq.endpoint"
   type  = "String"
-  value = replace(replace(aws_mq_broker.rabbitmq.instances.0.endpoints.0,"amqps://","")":5671","")
+  value = replace(replace(aws_mq_broker.rabbitmq.instances.0.endpoints.0,"amqps://", ""), ":5671", "")
 }
