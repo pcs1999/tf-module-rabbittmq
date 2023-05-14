@@ -1,3 +1,69 @@
+// creating the aws_iam_role
+resource "aws_iam_role" "aws_role" {
+  name = "${var.env}-${var.component}-role"
+
+
+  assume_role_policy = jsonencode({
+    Version          = "2012-10-17"
+    Statement        = [
+      {
+        Action       = "sts:AssumeRole"
+        Effect       = "Allow"
+        Sid          = ""
+        Principal    = {
+          Service    = "ec2.amazonaws.com"
+        }
+      },
+    ]
+  })
+
+  tags = merge (local.common_tags, { Name = "${var.env}-${var.component}-role" } )
+
+}
+
+resource "aws_iam_instance_profile" "para_instance_profile" {
+  role = aws_iam_role.aws_role.name
+  name = "${var.env}-${var.component}-role"
+}
+
+resource "aws_iam_policy" "aws_parameter_policy" {
+  name        = "${var.env}-${var.component}-parameter_store_role"
+  path        = "/"
+  description = "${var.env}-${var.component}-parameter_store_role"
+
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "VisualEditor0",
+        "Effect": "Allow",
+        "Action": [
+          "ssm:GetParameterHistory",
+          "ssm:GetParametersByPath",
+          "ssm:GetParameters",
+          "ssm:GetParameter"
+        ],
+        "Resource" : [
+          "arn:aws:ssm:us-east-1:490686900756:parameter/${var.env}.${var.component}*"
+
+
+        ]
+      },
+      {
+        "Sid": "VisualEditor1",
+        "Effect": "Allow",
+        "Action": "ssm:DescribeParameters",
+        "Resource": "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "policy-attach" {
+  role       = aws_iam_role.aws_role.name
+  policy_arn = aws_iam_policy.aws_parameter_policy.arn
+}
+
 
 resource "aws_security_group" "rabbitmq" {
   name        = "${var.env}-rabbittmq_security_group"
@@ -73,7 +139,7 @@ resource "aws_spot_instance_request" "rabbitmq_instance" {
   wait_for_fulfillment = true
   vpc_security_group_ids = [aws_security_group.rabbitmq.id]
   user_data = base64encode(templatefile("${path.module}/user_data.sh",{component="rabbitmq",env=var.env} ))
-
+  iam_instance_profile = aws_iam_instance_profile.para_instance_profile.name
 
   tags = merge (local.common_tags, { Name = "${var.env}-rabbitmq_instance" } )
 
