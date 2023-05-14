@@ -149,7 +149,7 @@ resource "aws_route53_record" "rabbitmq_DNS_record" {
   zone_id = "Z09063921V1VGRMXUB88J"
   name    = "rabbitmq-${var.env}.chandupcs.online"
   type    = "A"
-  ttl     = 300
+  ttl     = 30
   records = [aws_spot_instance_request.rabbitmq_instance.private_ip]
 }
 
