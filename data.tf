@@ -8,3 +8,10 @@ data "aws_ssm_parameter" "rabbitmq_ADMIN_PASS" {
 data "aws_kms_key" "key" {
   key_id = "alias/roboshop"
 }
+
+data "aws_ami" "centos8_ami" {
+  most_recent      = true
+  name_regex       = "Centos-8-DevOps-Practice"
+  owners           = ["973714476881"]
+
+}
