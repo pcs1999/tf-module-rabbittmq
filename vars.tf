@@ -10,3 +10,6 @@ variable "bastion_cidr" {}
 variable "component" {
   default = "rabbitmq"
 }
+variable "service_name" {
+  default = "rabbitmq"
+}
