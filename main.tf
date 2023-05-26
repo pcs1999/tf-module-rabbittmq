@@ -135,7 +135,7 @@ resource "aws_security_group" "rabbitmq" {
 
 
 resource "aws_spot_instance_request" "rabbitmq_instance" {
-  ami = data.aws_ami.centos8_ami.image_id
+  ami = data.aws_ami.ami_id.image_id
   instance_type = "t3.small"
   subnet_id = var.subnet_ids[0]
   wait_for_fulfillment = true
