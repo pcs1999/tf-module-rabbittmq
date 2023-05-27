@@ -155,7 +155,7 @@ resource "aws_instance" "rabbitmq_instance" {
   user_data = base64encode(templatefile("${path.module}/user_data.sh",{component="rabbitmq",env=var.env} ))
   iam_instance_profile = aws_iam_instance_profile.para_instance_profile.name
 
-  tags = merge (local.common_tags, { Name = "${var.env}-rabbitmq_instance" } )
+  tags = merge (local.common_tags, { Name = "${var.env}-${component}" } )
 
 }
 
